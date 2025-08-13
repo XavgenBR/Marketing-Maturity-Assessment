@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series A Marketing Readiness Assessment | Branch Road</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .assessment-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .assessment-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00f5ff 0%, #764ba2 100%);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .time-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .progress-container {
+            margin-bottom: 40px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f5ff 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .question-container {
+            display: none;
+        }
+        
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #764ba2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        
+        .question-text {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .question-helper {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .option:hover {
+            border-color: #764ba2;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, rgba(118,75,162,0.05) 0%, rgba(0,245,255,0.05) 100%);
+        }
+        
+        .option-points {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #00f5ff;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .option-title {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .option-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-prev {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .btn-prev:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex-grow: 1;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(118,75,162,0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .results-form {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .results-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+        
+        .score-preview {
+            background: linear-gradient(135deg, rgba(118,75,162,0.1) 0%, rgba(0,245,255,0.1) 100%);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .score-category {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-top: 8px;
+        }
+        
+        .benefits-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .benefits-list li {
+            padding-left: 28px;
+            position: relative;
+            margin-bottom: 12px;
+            color: #666;
+        }
+        
+        .benefits-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00f5ff;
+            font-weight: bold;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #f0f7ff;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="assessment-container">
+        <div class="header">
+            <div class="logo">Branch Road</div>
+            <h1>Series A Marketing Readiness Assessment</h1>
+            <p class="subtitle">Find out what's holding your marketing back from scaling</p>
+            <div class="time-indicator">
+                <span>⏱</span>
+                <span>5-7 minutes</span>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 10%"></div>
+            </div>
+            <div class="progress-text" id="progressText">Question 1 of 10</div>
+        </div>
+        
+        <!-- Question 1: Post-Funding Timeline -->
+        <div class="question-container active" data-question="1">
+            <span class="question-number">Question 1</span>
+            <h2 class="question-text">How long ago did you close your Series A?</h2>
+            <p class="question-helper">This helps us understand where you are in your growth journey</p>
+            <div class="options-container">
+                <div class="option" data-points="4" data-category="urgent">
+                    <span class="option-points">High Urgency</span>
+                    <div class="option-title">0-3 months ago</div>
+                    <div class="option-description">Just closed, pressure to show traction ASAP</div>
+                </div>
+                <div class="option" data-points="3" data-category="planning">
+                    <div class="option-title">3-6 months ago</div>
+                    <div class="option-description">Initial plans in motion, seeing what works</div>
+                </div>
+                <div class="option" data-points="2" data-category="executing">
+                    <div class="option-title">6-12 months ago</div>
+                    <div class="option-description">Mid-execution, need to accelerate</div>
+                </div>
+                <div class="option" data-points="1" data-category="optimizing">
+                    <div class="option-title">12+ months ago</div>
+                    <div class="option-description">Looking to optimize before Series B</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 2: Marketing Team Readiness -->
+        <div class="question-container" data-question="2">
+            <span class="question-number">Question 2</span>
+            <h2 class="question-text">What's your marketing team's current reality?</h2>
+            <p class="question-helper">Be honest - we know Series A growing pains</p>
+            <div class="options-container">
+                <div class="option" data-points="4" data-category="team-gap">
+                    <span class="option-points">Critical Gap</span>
+                    <div class="option-title">1-2 people doing everything</div>
+                    <div class="option-description">Drowning in tactical work, no time for strategy</div>
+                </div>
+                <div class="option" data-points="3" data-category="team-gap">
+                    <div class="option-title">3-4 people but missing key skills</div>
+                    <div class="option-description">Have generalists, need specialists (video, PR, SEO)</div>
+                </div>
+                <div class="option" data-points="2" data-category="team-scale">
+                    <div class="option-title">Good team but can't scale fast enough</div>
+                    <div class="option-description">Quality is there but quantity/speed is lacking</div>
+                </div>
+                <div class="option" data-points="1" data-category="team-optimize">
+                    <div class="option-title">Strong team looking for specific expertise</div>
+                    <div class="option-description">Need help in 1-2 specific areas only</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 3: Board/Investor Pressure -->
+        <div class="question-container" data-question="3">
+            <span class="question-number">Question 3</span>
+            <h2 class="question-text">What marketing metrics is your board asking about?</h2>
+            <p class="question-helper">What's keeping you up at night before board meetings</p>
+            <div class="options-container">
+                <div class="option" data-points="3" data-category="pipeline">
+                    <div class="option-title">Pipeline generation</div>
+                    <div class="option-description">"Where are the qualified leads?"</div>
+                </div>
+                <div class="option" data-points="3" data-category="brand">
+                    <div class="option-title">Brand awareness & PR</div>
+                    <div class="option-description">"Why isn't anyone talking about us?"</div>
+                </div>
+                <div class="option" data-points="3" data-category="efficiency">
+                    <div class="option-title">CAC and marketing efficiency</div>
+                    <div class="option-description">"Why does each customer cost so much?"</div>
+                </div>
+                <div class="option" data-points="3" data-category="content">
+                    <div class="option-title">Content & thought leadership</div>
+                    <div class="option-description">"Where's our market presence?"</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 4: Current Marketing Spend Efficiency -->
+        <div class="question-container" data-question="4">
+            <span class="question-number">Question 4</span>
+            <h2 class="question-text">How efficiently is your marketing budget being used?</h2>
+            <p class="question-helper">Where your Series A funding is actually going</p>
+            <div class="options-container">
+                <div class="option" data-points="2" data-category="budget-tools">
+                    <div class="option-title">Too much on tools/software</div>
+                    <div class="option-description">Expensive MarTech stack, not enough content/campaigns</div>
+                </div>
+                <div class="option" data-points="3" data-category="budget-ads">
+                    <div class="option-title">Burning cash on paid ads</div>
+                    <div class="option-description">High CAC, need organic/content channels</div>
+                </div>
+                <div class="option" data-points="4" data-category="budget-unclear">
+                    <div class="option-title">Honestly, we're not sure</div>
+                    <div class="option-description">Spending happening but ROI is unclear</div>
+                </div>
+                <div class="option" data-points="1" data-category="budget-good">
+                    <div class="option-title">Pretty efficiently</div>
+                    <div class="option-description">Clear ROI on most activities</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 5: Content & Creative Capabilities -->
+        <div class="question-container" data-question="5">
+            <span class="question-number">Question 5</span>
+            <h2 class="question-text">How's your content engine performing?</h2>
+            <p class="question-helper">The fuel for all your marketing channels</p>
+            <div class="options-container">
+                <div class="option" data-points="4" data-category="content-none">
+                    <span class="option-points">Major Gap</span>
+                    <div class="option-title">Barely producing content</div>
+                    <div class="option-description">Maybe 1-2 pieces a month, if that</div>
+                </div>
+                <div class="option" data-points="3" data-category="content-quality">
+                    <div class="option-title">Quantity without quality</div>
+                    <div class="option-description">Publishing regularly but it's not moving the needle</div>
+                </div>
+                <div class="option" data-points="3" data-category="content-scale">
+                    <div class="option-title">Good quality, can't scale</div>
+                    <div class="option-description">Takes too long, costs too much</div>
+                </div>
+                <div class="option" data-points="2" data-category="content-variety">
+                    <div class="option-title">Blog only - need video, PR, social</div>
+                    <div class="option-description">Written content sorted, everything else lacking</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 6: Sales & Marketing Alignment -->
+        <div class="question-container" data-question="6">
+            <span class="question-number">Question 6</span>
+            <h2 class="question-text">How aligned are your sales and marketing teams?</h2>
+            <p class="question-helper">The #1 predictor of Series A growth success</p>
+            <div class="options-container">
+                <div class="option" data-points="4" data-category="alignment-broken">
+                    <span class="option-points">Fix This First</span>
+                    <div class="option-title">They barely talk</div>
+                    <div class="option-description">Operating in silos, finger-pointing over leads</div>
+                </div>
+                <div class="option" data-points="3" data-category="alignment-poor">
+                    <div class="option-title">Sales complains about lead quality</div>
+                    <div class="option-description">Marketing says sales doesn't follow up properly</div>
+                </div>
+                <div class="option" data-points="2" data-category="alignment-improving">
+                    <div class="option-title">Getting better but not there yet</div>
+                    <div class="option-description">Some collaboration but no unified process</div>
+                </div>
+                <div class="option" data-points="1" data-category="alignment-good">
+                    <div class="option-title">Pretty well aligned</div>
+                    <div class="option-description">Regular syncs, shared metrics, mutual respect</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 7: Competitive Pressure -->
+        <div class="question-container" data-question="7">
+            <span class="question-number">Question 7</span>
+            <h2 class="question-text">How visible are you compared to competitors?</h2>
+            <p class="question-helper">Market perception matters for Series A companies</p>
+            <div class="options-container">
+                <div class="option" data-points="4" data-category="visibility-none">
+                    <span class="option-points">Urgent Need</span>
+                    <div class="option-title">They dominate, we're invisible</div>
+                    <div class="option-description">Competitors own the narrative in our space</div>
+                </div>
+                <div class="option" data-points="3" data-category="visibility-behind">
+                    <div class="option-title">We're playing catch-up</div>
+                    <div class="option-description">They get the media coverage and speaking slots</div>
+                </div>
+                <div class="option" data-points="2" data-category="visibility-equal">
+                    <div class="option-title">About equal presence</div>
+                    <div class="option-description">Competing but want to pull ahead</div>
+                </div>
+                <div class="option" data-points="1" data-category="visibility-leading">
+                    <div class="option-title">We're leading the conversation</div>
+                    <div class="option-description">Strong thought leadership position</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 8: Marketing Channels Performance -->
+        <div class="question-container" data-question="8">
+            <span class="question-number">Question 8</span>
+            <h2 class="question-text">Which marketing channels are actually working for you?</h2>
+            <p class="question-helper">Where you're seeing real ROI vs. hoping for results</p>
+            <div class="options-container">
+                <div class="option" data-points="4" data-category="channels-none">
+                    <div class="option-title">Nothing's really working yet</div>
+                    <div class="option-description">Trying everything, nothing's clicking</div>
+                </div>
+                <div class="option" data-points="3" data-category="channels-one">
+                    <div class="option-title">One channel only (usually paid ads)</div>
+                    <div class="option-description">Risky dependency on a single source</div>
+                </div>
+                <div class="option" data-points="2" data-category="channels-some">
+                    <div class="option-title">2-3 channels showing promise</div>
+                    <div class="option-description">Need to diversify and scale what works</div>
+                </div>
+                <div class="option" data-points="1" data-category="channels-multi">
+                    <div class="option-title">Multiple channels performing well</div>
+                    <div class="option-description">Good mix but always room to optimize</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 9: Immediate Blockers -->
+        <div class="question-container" data-question="9">
+            <span class="question-number">Question 9</span>
+            <h2 class="question-text">What's the #1 thing blocking your marketing from scaling?</h2>
+            <p class="question-helper">The bottleneck that's slowing everything down</p>
+            <div class="options-container">
+                <div class="option" data-points="3" data-category="blocker-bandwidth">
+                    <div class="option-title">Team bandwidth</div>
+                    <div class="option-description">Too much to do, not enough hands</div>
+                </div>
+                <div class="option" data-points="3" data-category="blocker-skills">
+                    <div class="option-title">Missing key skills</div>
+                    <div class="option-description">Need video, PR, SEO, or other expertise</div>
+                </div>
+                <div class="option" data-points="3" data-category="blocker-production">
+                    <div class="option-title">Content production speed</div>
+                    <div class="option-description">Takes weeks to get anything out the door</div>
+                </div>
+                <div class="option" data-points="3" data-category="blocker-strategy">
+                    <div class="option-title">Lack of clear strategy</div>
+                    <div class="option-description">Doing random acts of marketing</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 10: Q1 2025 Priority -->
+        <div class="question-container" data-question="10">
+            <span class="question-number">Question 10</span>
+            <h2 class="question-text">What HAS to happen in your marketing in the next 90 days?</h2>
+            <p class="question-helper">Your make-or-break priority for Q1</p>
+            <div class="options-container">
+                <div class="option" data-points="3" data-category="priority-pipeline">
+                    <div class="option-title">Generate 2-3X more qualified pipeline</div>
+                    <div class="option-description">Sales team needs leads NOW</div>
+                </div>
+                <div class="option" data-points="3" data-category="priority-brand">
+                    <div class="option-title">Establish market presence</div>
+                    <div class="option-description">Get noticed, build credibility fast</div>
+                </div>
+                <div class="option" data-points="3" data-category="priority-content">
+                    <div class="option-title">Launch consistent content engine</div>
+                    <div class="option-description">Regular cadence across all channels</div>
+                </div>
+                <div class="option" data-points="3" data-category="priority-abm">
+                    <div class="option-title">Win specific enterprise accounts</div>
+                    <div class="option-description">Land those logo deals investors want</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Form -->
+        <div class="results-form" id="resultsForm">
+            <div class="score-preview">
+                <div class="score-label">Your Marketing Readiness Score</div>
+                <div class="score-value" id="scoreValue">0</div>
+                <div class="score-category" id="scoreCategory">Calculating...</div>
+            </div>
+            
+            <h2 style="margin-bottom: 20px;">Get Your Series A Marketing Playbook</h2>
+            <p style="color: #666; margin-bottom: 20px;">Based on your responses, we'll create a custom 90-day action plan specifically for Series A companies like yours</p>
+            
+            <ul class="benefits-list">
+                <li>Gap analysis showing exactly what's holding you back</li>
+                <li>Prioritized roadmap based on your board's expectations</li>
+                <li>Budget allocation recommendations for maximum ROI</li>
+                <li>Quick wins you can implement before your next board meeting</li>
+                <li>Benchmark data from other Series A companies in your space</li>
+            </ul>
+            
+            <form id="leadForm">
+                <div class="form-group">
+                    <label class="form-label" for="firstName">First Name *</label>
+                    <input type="text" class="form-input" id="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="lastName">Last Name *</label>
+                    <input type="text" class="form-input" id="lastName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Work Email *</label>
+                    <input type="email" class="form-input" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="company">Company *</label>
+                    <input type="text" class="form-input" id="company" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="role">Your Role *</label>
+                    <input type="text" class="form-input" id="role" placeholder="e.g., VP Marketing, CMO, Founder" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="revenue">Annual Revenue (Optional)</label>
+                    <select class="form-input" id="revenue">
+                        <option value="">Select revenue range</option>
+                        <option value="<10M">Less than $10M</option>
+                        <option value="10-25M">$10M - $25M</option>
+                        <option value="25-50M">$25M - $50M</option>
+                        <option value="50M+">$50M+</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-next" style="width: 100%;">
+                    Get My Series A Marketing Playbook →
+                </button>
+                
+                <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">
+                    Your information is secure. We'll send your personalized playbook and may follow up with relevant Series A resources.
+                </p>
+            </form>
+        </div>
+        
+        <div class="navigation" id="navigation">
+            <button class="btn btn-prev" id="prevBtn" onclick="changeQuestion(-1)" disabled>
+                ← Previous
+            </button>
+            <button class="btn btn-next" id="nextBtn" onclick="changeQuestion(1)" disabled>
+                Next Question →
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 10;
+        let answers = {};
+        
+        // Initialize option click handlers
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const container = this.closest('.question-container');
+                const questionNum = container.dataset.question;
+                
+                // Remove previous selection
+                container.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Add selection
+                this.classList.add('selected');
+                
+                // Store answer with category
+                answers[questionNum] = {
+                    points: parseInt(this.dataset.points),
+                    category: this.dataset.category || '',
+                    text: this.querySelector('.option-title').textContent
+                };
+                
+                // Enable next button
+                document.getElementById('nextBtn').disabled = false;
+                
+                // Auto-advance after 500ms
+                setTimeout(() => {
+                    if (currentQuestion < totalQuestions) {
+                        changeQuestion(1);
+                    }
+                }, 500);
+            });
+        });
+        
+        function changeQuestion(direction) {
+            const currentContainer = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+            currentContainer.classList.remove('active');
+            
+            currentQuestion += direction;
+            
+            if (currentQuestion > totalQuestions) {
+                // Show results form
+                showResults();
+                return;
+            }
+            
+            const nextContainer = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+            nextContainer.classList.add('active');
+            
+            // Update progress
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 1;
+            
+            // Check if current question has answer
+            const hasAnswer = answers[currentQuestion];
+            document.getElementById('nextBtn').disabled = !hasAnswer;
+            
+            if (currentQuestion === totalQuestions) {
+                document.getElementById('nextBtn').textContent = 'See My Results →';
+            }
+        }
+        
+        function showResults() {
+            // Calculate score and determine readiness level
+            let totalScore = 0;
+            let maxScore = 40; // 10 questions × 4 max points
+            let categories = {};
+            
+            Object.values(answers).forEach(answer => {
+                totalScore += answer.points;
+                if (answer.category) {
+                    categories[answer.category] = (categories[answer.category] || 0) + 1;
+                }
+            });
+            
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            
+            // Determine category based on score and patterns
+            let category = '';
+            let recommendation = '';
+            
+            if (percentage > 75) {
+                category = 'Critical - Immediate Action Needed';
+                recommendation = 'Your marketing needs urgent support to meet Series A expectations';
+            } else if (percentage > 50) {
+                category = 'At Risk - Scaling Challenges';
+                recommendation = 'Key gaps are preventing you from scaling effectively';
+            } else if (percentage > 25) {
+                category = 'Moderate - Room for Growth';
+                recommendation = 'You have foundations but need acceleration';
+            } else {
+                category = 'Strong - Optimize & Scale';
+                recommendation = 'You\'re ahead of most Series A companies';
+            }
+            
+            // Update score display
+            document.getElementById('scoreValue').textContent = percentage + '%';
+            document.getElementById('scoreCategory').textContent = category;
+            
+            // Hide navigation
+            document.getElementById('navigation').style.display = 'none';
+            
+            // Show results form
+            document.getElementById('resultsForm').classList.add('active');
+            
+            // Update progress to 100%
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('progressText').textContent = 'Assessment Complete!';
+        }
+        
+        // Form submission
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                company: document.getElementById('company').value,
+                role: document.getElementById('role').value,
+                revenue: document.getElementById('revenue').value,
+                answers: answers,
+                score: document.getElementById('scoreValue').textContent,
+                category: document.getElementById('scoreCategory').textContent,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Here you would send to your backend/CRM
+            console.log('Form submitted:', formData);
+            
+            // Show success message
+            alert('Thank you! Check your email for your personalized Series A Marketing Playbook. We\'ll be in touch within 24 hours to discuss your specific challenges.');
+        });
+    </script>
+</body>
+</html>
